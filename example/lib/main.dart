@@ -35,7 +35,18 @@ class _MyAppState extends State<MyApp> {
   }
 
   Widget buildBody(BuildContext context) {
-    return Center(
+    return Center(child: buildBanner(context));
+  }
+
+  Widget buildBanner(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: theme.colorScheme.onSurface,
+          width: 4,
+        ),
+      ),
       child: AdaView(controller: _controller),
     );
   }
