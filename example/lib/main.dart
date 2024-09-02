@@ -1,3 +1,4 @@
+import 'package:ada/ada_config.dart';
 import 'package:ada/ada_view.dart';
 import 'package:flutter/material.dart';
 
@@ -14,9 +15,11 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final _controller = AdaViewController(
-    environment: "wlgo1.dev4",
-    publisherId: "60fff8fbe80e7b248329d192",
-    tagId: "66869bd1f9169753980c0c45",
+    config: const AdaConfig(
+      environment: "wlgo1.dev4",
+      publisherId: "60fff8fbe80e7b248329d192",
+      tagId: "66869bd1f9169753980c0c45",
+    ),
   );
 
   @override

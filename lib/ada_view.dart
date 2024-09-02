@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:ada/ada_config.dart';
 import 'package:ada/ada_view_event.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -7,29 +8,15 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 class AdaViewController {
-  final String publisherId;
-  final String tagId;
-  final String? environment;
-  final bool? enableAutoRefresh;
+  final AdaConfig config;
 
   MethodChannel? _channel;
-  late final _events = StreamController<AdaViewEvent>.broadcast();
-  late final _size = StreamController<Size>.broadcast();
-  late final _creationArgs = {
-    "pubId": publisherId,
-    "tagId": tagId,
-    "environment": environment,
-    "enableAutoRefresh": enableAutoRefresh,
-  };
+  final _size = StreamController<Size>.broadcast();
+  final _events = StreamController<AdaViewEvent>.broadcast();
 
   late final events = _events.stream;
 
-  AdaViewController({
-    required this.publisherId,
-    required this.tagId,
-    this.environment,
-    this.enableAutoRefresh,
-  });
+  AdaViewController({required this.config});
 
   void loadNextAd({bool force = false}) {
     _channel?.invokeMethod("loadNextAd", {"force": force});
@@ -83,7 +70,7 @@ class AdaView extends StatelessWidget {
               maxWidth: constrains.maxWidth,
               minHeight: constrains.minHeight,
               maxHeight: constrains.maxHeight,
-              child: buildPlatform(context),
+              child: _buildPlatformView(context),
             ),
           );
         },
@@ -91,17 +78,17 @@ class AdaView extends StatelessWidget {
     });
   }
 
-  Widget buildPlatform(BuildContext context) {
+  Widget _buildPlatformView(BuildContext context) {
     final platform = defaultTargetPlatform;
     switch (platform) {
       case TargetPlatform.android:
-        return buildAndroidWidget(context);
+        return _buildAndroidView(context);
       default:
         return Text("Platform $platform not supported");
     }
   }
 
-  Widget buildAndroidWidget(BuildContext context) {
+  Widget _buildAndroidView(BuildContext context) {
     return PlatformViewLink(
       viewType: _nativeViewType,
       surfaceFactory: (context, controller) {
@@ -118,7 +105,7 @@ class AdaView extends StatelessWidget {
           id: params.id,
           viewType: _nativeViewType,
           layoutDirection: TextDirection.ltr,
-          creationParams: controller._creationArgs,
+          creationParams: _buildCreationArgs(),
           creationParamsCodec: const StandardMessageCodec(),
           onFocus: () {
             params.onFocusChanged(true);
@@ -128,5 +115,15 @@ class AdaView extends StatelessWidget {
           ..create();
       },
     );
+  }
+
+  dynamic _buildCreationArgs() {
+    final config = controller.config;
+    return {
+      "pubId": config.publisherId,
+      "tagId": config.tagId,
+      "environment": config.environment,
+      "enableAutoRefresh": config.enableAutoRefresh,
+    };
   }
 }

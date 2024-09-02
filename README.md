@@ -18,8 +18,10 @@ dependencies:
 ```dart
 class _MyState extends State<MyApp> {
   final _controller = AdaViewController(
-    publisherId: "publisher-id",
-    tagId: "tag-id",
+    config: const AdaConfig(
+      publisherId: "publisher-id",
+      tagId: "tag-id",
+    ),
   );
 
   // ...
