@@ -16,9 +16,9 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final _controller = AdaViewController(
     config: const AdaConfig(
-      environment: "wlgo1.dev4",
-      publisherId: "60fff8fbe80e7b248329d192",
-      tagId: "66869bd1f9169753980c0c45",
+      environment: "tg1",
+      publisherId: "565c56d3181f46bd608b459a",
+      tagId: "689c3cb35bdaa4402808f206",
     ),
   );
 

@@ -7,6 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
+///
+/// Main placement controller for displaying Ads
+///
 class AdaViewController {
   final AdaConfig config;
 
@@ -18,6 +21,9 @@ class AdaViewController {
 
   AdaViewController({required this.config});
 
+  ///
+  /// Load next Ad
+  ///
   void loadNextAd({bool force = false}) {
     _channel?.invokeMethod("loadNextAd", {"force": force});
   }
@@ -46,6 +52,9 @@ class AdaViewController {
   }
 }
 
+///
+/// Main placement view that displays Ads
+///
 class AdaView extends StatelessWidget {
   static const _nativeViewType = "AdaView";
 
@@ -117,13 +126,16 @@ class AdaView extends StatelessWidget {
     );
   }
 
-  dynamic _buildCreationArgs() {
+  Map<String, dynamic> _buildCreationArgs() {
     final config = controller.config;
     return {
       "pubId": config.publisherId,
       "tagId": config.tagId,
       "environment": config.environment,
       "enableAutoRefresh": config.enableAutoRefresh,
+      "scaleType": config.scaleType?.name,
+      "packageName": config.packageName,
+      "macros": config.macros,
     };
   }
 }

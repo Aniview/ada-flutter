@@ -24,19 +24,22 @@ internal class AdaViewWrapper(
     }
 
     private val channel = MethodChannel(binding.binaryMessenger, "AdaView_${viewId}")
-    private val view = SizeReporter(AdaView(context, config, Listener()))
+    private val wrapper = SizeReporter(AdaView(context))
 
     init {
         channel.setMethodCallHandler(this)
+
+        wrapper.view.load(config)
+        wrapper.view.addListener(Listener())
     }
 
     override fun getView(): View {
-        return view
+        return wrapper
     }
 
     override fun dispose() {
         Log.d(TAG, "dispose")
-        view.view.destroy()
+        wrapper.view.destroy()
     }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
@@ -44,7 +47,7 @@ internal class AdaViewWrapper(
 
         when (call.method) {
             "loadNextAd" -> {
-                view.view.loadNextAd(force = call.argument("force") ?: false)
+                wrapper.view.loadNextAd(force = call.argument("force") ?: false)
             }
 
             else -> result.notImplemented()

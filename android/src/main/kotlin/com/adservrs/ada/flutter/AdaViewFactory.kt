@@ -3,6 +3,7 @@ package com.adservrs.ada.flutter
 import android.content.Context
 import android.util.Log
 import com.adservrs.ada.AdaConfig
+import com.adservrs.ada.AdaScaleType
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.StandardMessageCodec
 import io.flutter.plugin.platform.PlatformView
@@ -42,6 +43,31 @@ internal class AdaViewFactory(
             config = config.copy(enableAutoRefresh = enableAutoRefresh)
         }
 
+        val scaleType = args["scaleType"].toAdaScaleType()
+        if (scaleType != null) {
+            config = config.copy(scaleType = scaleType)
+        }
+
+        val packageName = args["packageName"] as? String
+        if (packageName != null) {
+            config = config.copy(packageName = packageName)
+        }
+
+        val macros = args["macros"] as? Map<*, *>
+        if (macros != null) {
+            config = config.copy(macros = macros.entries.associate {
+                it.key.toString() to it.value.toString()
+            })
+        }
+
         return config
+    }
+
+    fun Any?.toAdaScaleType() = when (this) {
+        "fill" -> AdaScaleType.Fill
+        "center" -> AdaScaleType.Center
+        "centerCrop" -> AdaScaleType.CenterCrop
+        "centerInside" -> AdaScaleType.CenterInside
+        else -> null
     }
 }
