@@ -6,6 +6,10 @@
 
 ## 1.1.0
 
+* android sdk upgrades
+
+## 1.2.0
+
 * AdaSdk view for ios
 * Ada events for ios
 * Ada view dynamic ads for ios
