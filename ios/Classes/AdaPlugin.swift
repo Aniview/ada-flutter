@@ -1,12 +1,8 @@
 import Flutter
 import UIKit
 
-public class AdaPlugin: NSObject, FlutterPlugin {
-  public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "ada", binaryMessenger: registrar.messenger())
-    let instance = AdaPlugin()
-    registrar.addMethodCallDelegate(instance, channel: channel)
-  }
+public class AdaPlugin: NSObject {
+    private static var instance = AdaPlugin()
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     switch call.method {
@@ -16,4 +12,16 @@ public class AdaPlugin: NSObject, FlutterPlugin {
       result(FlutterMethodNotImplemented)
     }
   }
+}
+
+extension AdaPlugin: FlutterPlugin {
+    public static func register(with registrar: FlutterPluginRegistrar) {
+        let messenger = registrar.messenger()
+        
+        // view
+        registrar.register(
+            FLNativeViewFactory(messenger: messenger),
+            withId: "AdaView"
+        )
+    }
 }

@@ -1,0 +1,59 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 6.2.3 effective-5.10 (swiftlang-6.2.3.3.21 clang-1700.6.3.2)
+// swift-module-flags: -target arm64-apple-ios15.6-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -module-name AdaSdk
+// swift-module-flags-ignorable:  -formal-cxx-interoperability-mode=off -interface-compiler-version 6.2.3
+@_exported import AdaSdk
+import Combine
+import Foundation
+import GoogleMobileAds
+import OSLog
+import Swift
+import UIKit
+import UserMessagingPlatform
+import WebKit
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+public struct AdaConfig {
+  public let environment: Swift.String
+  public let pubId: Swift.String
+  public let tagId: Swift.String
+  public init(environment: Swift.String, pubId: Swift.String, tagId: Swift.String)
+  public init(pubId: Swift.String, tagId: Swift.String)
+}
+public enum AdaEvent {
+  case onLoaded
+  case onAdError
+  case onImpression
+  case onAdCanRefresh
+  case onClicked
+  public static func == (a: AdaSdk.AdaEvent, b: AdaSdk.AdaEvent) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public protocol AdaViewDelegate : AnyObject {
+  func onEvent(_ event: AdaSdk.AdaEvent)
+}
+public protocol SizeDelegate : AnyObject {
+  func onHeightChange(_ newValue: CoreFoundation.CGFloat)
+}
+@objc @_hasMissingDesignatedInitializers @_Concurrency.MainActor @preconcurrency final public class AdaView : UIKit.UIView {
+  @_Concurrency.MainActor @preconcurrency weak final public var delegate: (any AdaSdk.AdaViewDelegate)?
+  @_Concurrency.MainActor @preconcurrency weak final public var sizeDelegate: (any AdaSdk.SizeDelegate)?
+  #if compiler(>=5.3) && $NonescapableTypes
+  @_Concurrency.MainActor @preconcurrency public init(config: AdaSdk.AdaConfig, frame: CoreFoundation.CGRect = .zero, preferredAdSize: CoreFoundation.CGSize? = nil)
+  #endif
+  @_Concurrency.MainActor @preconcurrency final public func startLoading()
+  @_Concurrency.MainActor @preconcurrency @objc override final public func layoutSubviews()
+  @_Concurrency.MainActor @preconcurrency @objc override final public func didMoveToWindow()
+  @_Concurrency.MainActor @preconcurrency @objc override final public func didMoveToSuperview()
+  @_Concurrency.MainActor @preconcurrency @objc override final public var intrinsicContentSize: CoreFoundation.CGSize {
+    @objc get
+  }
+  @objc deinit
+}
+public let sdkVersionName: Swift.String
+extension AdaSdk.AdaEvent : Swift.Equatable {}
+extension AdaSdk.AdaEvent : Swift.Hashable {}

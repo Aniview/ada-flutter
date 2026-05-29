@@ -24,15 +24,22 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text("Ada plugin example"),
-        ),
-        body: buildBody(context),
+     return MaterialApp(
+    home: Scaffold(
+      backgroundColor: Colors.white,
+
+      appBar: AppBar(
+        title: const Text("Ada plugin example"),
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        elevation: 0,
+        shadowColor: Colors.transparent,
       ),
-    );
-  }
+
+      body: buildBody(context),
+    ),
+  );
+}
 
   Widget buildBody(BuildContext context) {
     return Center(child: buildBanner(context));

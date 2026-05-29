@@ -28,6 +28,10 @@ class AdaViewController {
     _channel?.invokeMethod("loadNextAd", {"force": force});
   }
 
+  void startLoading() {
+    _channel?.invokeMethod("startLoading");
+  }
+
   void _attach({required int viewId}) {
     _channel?.setMethodCallHandler(null);
     _channel = MethodChannel("AdaView_$viewId");
@@ -48,6 +52,8 @@ class AdaViewController {
         return _events.add(const OnAdCanRefreshEvent());
       case "onAdClicked":
         return _events.add(const OnAdClickedEvent());
+      case "onAdError":
+        return _events.add(const OnAdErrorEvent());
     }
   }
 }
@@ -89,9 +95,14 @@ class AdaView extends StatelessWidget {
 
   Widget _buildPlatformView(BuildContext context) {
     final platform = defaultTargetPlatform;
+
     switch (platform) {
       case TargetPlatform.android:
         return _buildAndroidView(context);
+
+      case TargetPlatform.iOS:
+        return _buildIosView(context);
+
       default:
         return Text("Platform $platform not supported");
     }
@@ -126,8 +137,20 @@ class AdaView extends StatelessWidget {
     );
   }
 
+    Widget _buildIosView(BuildContext context) {
+    return UiKitView(
+      viewType: _nativeViewType,
+      creationParams: _buildCreationArgs(),
+      creationParamsCodec: const StandardMessageCodec(),
+      onPlatformViewCreated: (id) {
+        controller._attach(viewId: id);
+      },
+    );
+  }
+
   Map<String, dynamic> _buildCreationArgs() {
     final config = controller.config;
+
     return {
       "pubId": config.publisherId,
       "tagId": config.tagId,
