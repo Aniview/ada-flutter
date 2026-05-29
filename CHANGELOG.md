@@ -13,3 +13,7 @@
 * AdaSdk view for ios
 * Ada events for ios
 * Ada view dynamic ads for ios
+
+## 1.2.0+01
+
+* documentation update
