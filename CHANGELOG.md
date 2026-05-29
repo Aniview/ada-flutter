@@ -14,6 +14,6 @@
 * Ada events for ios
 * Ada view dynamic ads for ios
 
-## 1.2.0+01
+## 1.2.0+1
 
 * documentation update
