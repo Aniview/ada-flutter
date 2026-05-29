@@ -24,29 +24,30 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-     return MaterialApp(
-    home: Scaffold(
-      backgroundColor: Colors.white,
-
-      appBar: AppBar(
-        title: const Text("Ada plugin example"),
+    return MaterialApp(
+      home: Scaffold(
         backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
-        elevation: 0,
-        shadowColor: Colors.transparent,
+        appBar: AppBar(
+          title: const Text("Ada plugin example"),
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+          elevation: 0,
+          shadowColor: Colors.transparent,
+        ),
+        body: buildBody(context),
       ),
-
-      body: buildBody(context),
-    ),
-  );
-}
+    );
+  }
 
   Widget buildBody(BuildContext context) {
-    return Center(child: buildBanner(context));
+    return Center(
+      child: buildBanner(context),
+    );
   }
 
   Widget buildBanner(BuildContext context) {
     final theme = Theme.of(context);
+
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
@@ -54,7 +55,9 @@ class _MyAppState extends State<MyApp> {
           width: 4,
         ),
       ),
-      child: AdaView(controller: _controller),
+      child: AdaView(
+        controller: _controller,
+      ),
     );
   }
 }
