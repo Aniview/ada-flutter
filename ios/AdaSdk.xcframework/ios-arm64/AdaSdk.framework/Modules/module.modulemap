@@ -1,0 +1,6 @@
+framework module AdaSdk {
+  umbrella header "AdaSdk.h"
+  export *
+
+  module * { export * }
+}

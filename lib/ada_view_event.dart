@@ -21,3 +21,7 @@ class OnAdCanRefreshEvent extends AdaViewEvent {
 class OnAdClickedEvent extends AdaViewEvent {
   const OnAdClickedEvent();
 }
+
+class OnAdErrorEvent extends AdaViewEvent {
+  const OnAdErrorEvent();
+}
