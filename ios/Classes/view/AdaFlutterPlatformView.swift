@@ -6,114 +6,95 @@
 //
 
 import Flutter
+import UIKit
 import AdaSdk
 
 final class AdaFlutterPlatformView: NSObject, FlutterPlatformView {
-    
     private let containerView: AdaContainerView
-    
+
     init(
         frame: CGRect,
         viewId: Int64,
         args: Any?,
         messenger: FlutterBinaryMessenger
     ) {
-        
         guard let config = AdaConfigParser.parseConfig(from: args) else {
             fatalError("AdaView requires valid pubId and tagId in config")
         }
-        
-        self.containerView = AdaContainerView(
+        containerView = AdaContainerView(
             frame: frame,
             viewId: viewId,
             config: config,
             messenger: messenger
         )
-        
         super.init()
     }
-    
+
     func view() -> UIView {
-        return containerView
+        containerView
     }
 }
 
 final class AdaContainerView: UIView {
-    
+
     // MARK: - Properties
-    
-    let adView: AdaView
-    
+
+    private let adView: AdaView
     private let channel: FlutterMethodChannel
-    
-    private var reportedWidth: CGFloat = 0
-    private var reportedHeight: CGFloat = 0
-    
+    private var currentHeight: CGFloat = 480
+
     // MARK: - Init
-    
+
     init(
         frame: CGRect,
         viewId: Int64,
         config: AdaSdk.AdaConfig,
         messenger: FlutterBinaryMessenger
     ) {
-        
-        // Create SDK view
-        self.adView = AdaView(config: config)
-        
-        // Flutter channel
-        self.channel = FlutterMethodChannel(
+
+        adView = AdaView(config: config)
+        channel = FlutterMethodChannel(
             name: "AdaView_\(viewId)",
             binaryMessenger: messenger
         )
-        
+
         super.init(frame: frame)
         
         setupChannel()
         setupUI()
-        
+
+        // delegates
         adView.delegate = self
         adView.sizeDelegate = self
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    // MARK: - Layout
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        measureAndReportSize()
-    }
-    
-    // MARK: - Setup method channel
+
+    // MARK: - Channel
+
     private func setupChannel() {
         channel.setMethodCallHandler { [weak self] call, result in
             switch call.method {
             case "startLoading":
-                self?.handleStartLoading()
+                self?.adView.startLoading()
             default:
                 break
             }
+            result(nil)
         }
     }
-    
-    private func handleStartLoading() {
-        adView.startLoading()
-    }
-    
-    // MARK: - Setup UI
+
+    // MARK: - UI
+
     private func setupUI() {
+        backgroundColor = .clear
         clipsToBounds = true
-        backgroundColor = .white
-        isOpaque = true
-        
         adView.translatesAutoresizingMaskIntoConstraints = false
-        
+
         addSubview(adView)
-        
+
         NSLayoutConstraint.activate([
             adView.leadingAnchor.constraint(equalTo: leadingAnchor),
             adView.trailingAnchor.constraint(equalTo: trailingAnchor),
@@ -121,48 +102,15 @@ final class AdaContainerView: UIView {
             adView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
-    
-    
-    // MARK: - Measurement
-    
-    private func measureAndReportSize() {
-        guard bounds.width > 0 else { return }
-        
-        adView.layoutIfNeeded()
-        
-        let targetSize = CGSize(
-            width: bounds.width,
-            height: UIView.layoutFittingCompressedSize.height
-        )
-        
-        let fittingSize = adView.systemLayoutSizeFitting(
-            targetSize,
-            withHorizontalFittingPriority: .required,
-            verticalFittingPriority: .fittingSizeLevel
-        )
-        
-        let width = ceil(fittingSize.width)
-        let height = ceil(fittingSize.height)
-        
-        guard width != reportedWidth ||
-                height != reportedHeight else {
-            return
-        }
-        
-        reportedWidth = width
-        reportedHeight = height
-        
-        notifyFlutterSizeChanged(
-            width: width,
-            height: height
-        )
-    }
-    
-    private func notifyFlutterSizeChanged(width: CGFloat, height: CGFloat) {
+
+    // MARK: - Size Reporting
+
+    private func notifyFlutterSizeChanged(height: CGFloat) {
+
         channel.invokeMethod(
             "onAdSizeChanged",
             arguments: [
-                "width": width,
+                "width": bounds.width,
                 "height": height
             ]
         )
@@ -172,19 +120,20 @@ final class AdaContainerView: UIView {
 // MARK: - AdaViewDelegate
 
 extension AdaContainerView: AdaSdk.AdaViewDelegate {
-    
+
     func onEvent(_ event: AdaSdk.AdaEvent) {
         switch event {
         case .onLoaded:
             channel.invokeMethod("onAdLoaded", arguments: nil)
-        case .onAdError:
-            channel.invokeMethod("onAdError", arguments: nil)
         case .onImpression:
             channel.invokeMethod("onAdImpression", arguments: nil)
         case .onAdCanRefresh:
             channel.invokeMethod("onAdCanRefresh", arguments: nil)
         case .onClicked:
             channel.invokeMethod("onAdClicked", arguments: nil)
+        case .onAdError:
+            channel.invokeMethod("onAdError", arguments: nil)
+            
         @unknown default:
             break
         }
@@ -194,10 +143,14 @@ extension AdaContainerView: AdaSdk.AdaViewDelegate {
 // MARK: - SizeDelegate
 
 extension AdaContainerView: AdaSdk.SizeDelegate {
-    
+
     func onHeightChange(_ newValue: CGFloat) {
-        Task { @MainActor [weak self] in
-            self?.setNeedsLayout()
+        guard currentHeight != newValue else {
+            return
         }
+        currentHeight = newValue
+        
+        // request height change on flutter
+        notifyFlutterSizeChanged(height: newValue)
     }
 }

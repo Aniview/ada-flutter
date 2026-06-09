@@ -70,29 +70,20 @@ class AdaView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constrains) {
-      return StreamBuilder(
-        stream: controller._size.stream,
-        builder: (context, snapshot) {
-          final size = snapshot.data ?? Size.zero;
-          final query = MediaQuery.of(context);
+    return StreamBuilder<Size>(
+      stream: controller._size.stream,
+      builder: (context, snapshot) {
+        final size = snapshot.data ?? const Size(300, 480);
 
-          return SizedBox(
-            width: size.width / query.devicePixelRatio,
-            height: size.height / query.devicePixelRatio,
-            child: OverflowBox(
-              minWidth: constrains.minWidth,
-              maxWidth: constrains.maxWidth,
-              minHeight: constrains.minHeight,
-              maxHeight: constrains.maxHeight,
-              child: _buildPlatformView(context),
-            ),
-          );
-        },
-      );
-    });
+        return SizedBox(
+          width: double.infinity,
+          height: size.height,
+          child: _buildPlatformView(context),
+        );
+      },
+    );
   }
-
+  
   Widget _buildPlatformView(BuildContext context) {
     final platform = defaultTargetPlatform;
 

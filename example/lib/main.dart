@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'package:ada/ada_config.dart';
 import 'package:ada/ada_view.dart';
 import 'package:flutter/material.dart';
+import 'profiles.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,13 +16,54 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final _controller = AdaViewController(
-    config: const AdaConfig(
-      environment: "tg1",
-      publisherId: "565c56d3181f46bd608b459a",
-      tagId: "689c3cb35bdaa4402808f206",
-    ),
-  );
+  Profile _selectedProfile = Profile.profileA;
+
+  late AdaViewController _controller;
+  StreamSubscription? _eventSubscription;
+  String _lastEvent = 'No events yet';
+
+  @override
+  void initState() {
+    super.initState();
+    _createController();
+  }
+
+  @override
+  void dispose() {
+    _eventSubscription?.cancel();
+    super.dispose();
+  }
+
+  void _createController() {
+    _eventSubscription?.cancel();
+
+    _controller = AdaViewController(
+      config: AdaConfig(
+        environment: _selectedProfile.config.environment,
+        publisherId: _selectedProfile.config.pubId,
+        tagId: _selectedProfile.config.tagId,
+      ),
+    );
+
+    _eventSubscription = _controller.events.listen((event) {
+      if (!mounted) return;
+
+      setState(() {
+        _lastEvent = event.runtimeType.toString();
+      });
+    });
+  }
+
+  void _changeProfile(Profile profile) {
+    if (_selectedProfile == profile) {
+      return;
+    }
+
+    setState(() {
+      _selectedProfile = profile;
+      _createController();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,35 +71,98 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          title: const Text("Ada plugin example"),
           backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white,
           elevation: 0,
-          shadowColor: Colors.transparent,
+          title: Text(_selectedProfile.title),
+
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.blue.shade300,
+                  ),
+                ),
+                child: DropdownButton<Profile>(
+                  value: _selectedProfile,
+                  underline: const SizedBox.shrink(),
+                  icon: const Icon(Icons.arrow_drop_down),
+                  onChanged: (profile) {
+                    if (profile != null) {
+                      _changeProfile(profile);
+                    }
+                  },
+                  items: Profile.values.map((profile) {
+                    return DropdownMenuItem<Profile>(
+                      value: profile,
+                      child: Text(profile.title),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
+          ],
         ),
-        body: buildBody(context),
-      ),
-    );
-  }
+        body: SafeArea(
+          child: Column(
+            children: [
+              const SizedBox(height: 24),
+              const Text(
+                'Ada plugin example',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue,
+                ),
+              ),
 
-  Widget buildBody(BuildContext context) {
-    return Center(
-      child: buildBanner(context),
-    );
-  }
+              const SizedBox(height: 12),
 
-  Widget buildBanner(BuildContext context) {
-    final theme = Theme.of(context);
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    const Text(
+                      'Last event:',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        _lastEvent,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
 
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: theme.colorScheme.onSurface,
-          width: 4,
+              const SizedBox(height: 24),
+
+              ///
+              /// AdaView 
+              /// 
+              Expanded(
+                child: Center(
+                  child: AdaView(
+                    controller: _controller,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-      child: AdaView(
-        controller: _controller,
       ),
     );
   }
