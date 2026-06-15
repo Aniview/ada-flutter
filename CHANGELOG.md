@@ -17,3 +17,9 @@
 ## 1.2.0+1
 
 * documentation update
+
+## 1.3.0
+
+* fix for ad view touches not responding
+* webView size improvements
+* example application appearance updates 
