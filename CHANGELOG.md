@@ -23,3 +23,8 @@
 * fix for ad view touches not responding
 * webView size improvements
 * example application appearance updates 
+
+## 1.4.0
+
+* AdaSdk required init method for ios
+* reporting macros support

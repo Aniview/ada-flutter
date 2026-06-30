@@ -10,7 +10,7 @@ Here are steps to configure a fresh project:
 
 ```yaml
 dependencies:
-    ada: ^1.3.0
+    ada: ^1.4.0
 ```
 
 2. Create `AdaViewController` instance:
