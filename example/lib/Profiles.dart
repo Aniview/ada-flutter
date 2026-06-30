@@ -40,6 +40,13 @@ enum Profile {
       tagId: '66869bd1f9169753980c0c45',
       environment: 'wlgo1.dev4',
     ),
+  ),
+
+  D(
+    ProfileConfig(
+      pubId: '565c56d3181f46bd608b459a',
+      tagId: '698c3cddcef77154b90bffd6',
+    ),
   );
 
   const Profile(this.config);
@@ -74,6 +81,8 @@ extension ProfileDisplay on Profile {
         return 'AdMob';
       case Profile.dev4:
         return 'Dev4';
+      case Profile.D:
+      return 'D';
     }
   }
 }
