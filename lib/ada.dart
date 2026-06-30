@@ -9,9 +9,9 @@ class Ada {
   ///
   /// Initialize instance of the AdaSDK.
   ///
-  static Ada initialize({String? iosStoreUrl}) {
+  static Future<Ada> initialize({String? iosStoreUrl}) async {
     if (!_initialized) {
-      _channel.invokeMethod("initialize", {"iosStoreUrl": iosStoreUrl});
+        await _channel.invokeMethod("initialize", {"iosStoreUrl": iosStoreUrl});
       _initialized = true;
     }
     return const Ada._();

@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'profiles.dart';
 import 'package:ada/ada.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Ada.initialize(iosStoreUrl: "https://apps.apple.com/us/app/demo-app/id9999999");
+    await Ada.initialize(iosStoreUrl: "https://apps.apple.com/us/app/demo-app/id9999999");
   runApp(const MyApp());
 }
 

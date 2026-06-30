@@ -13,7 +13,7 @@ enum Profile {
     ),
   ),
 
-  gam300x250(
+  gam300x250_1(
     ProfileConfig(
       pubId: '565c56d3181f46bd608b459a',
       tagId: '681218808cd5289fd307e084',
@@ -42,7 +42,7 @@ enum Profile {
     ),
   ),
 
-  D(
+  gam300x250_2(
     ProfileConfig(
       pubId: '565c56d3181f46bd608b459a',
       tagId: '698c3cddcef77154b90bffd6',
@@ -73,16 +73,16 @@ extension ProfileDisplay on Profile {
         return 'Profile A';
       case Profile.prod:
         return 'Prod';
-      case Profile.gam300x250:
-        return 'GAM 300x250';
+      case Profile.gam300x250_1:
+        return 'GAM 300x250 -> 1';
       case Profile.directBanner:
         return 'Direct Banner';
       case Profile.adMob:
         return 'AdMob';
       case Profile.dev4:
         return 'Dev4';
-      case Profile.D:
-      return 'D';
+      case Profile.gam300x250_2:
+      return 'GAM 300x250 -> 2';
     }
   }
 }

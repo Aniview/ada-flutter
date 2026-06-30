@@ -8,7 +8,7 @@
 import Flutter
 import AdaSdk
 
-public class AdaMethodHandler {
+public final class AdaMethodHandler {
     private var registrar: FlutterPluginRegistrar?
     private var messenger: FlutterBinaryMessenger?
    
