@@ -12,8 +12,14 @@ Here are steps to configure a fresh project:
 dependencies:
     ada: ^1.4.0
 ```
+2. Initialize `AdaSDK` framework:
 
-2. Create `AdaViewController` instance:
+```dart
+    await Ada.initialize(iosStoreUrl: "STORE_URL_TO_YOUR_APP");
+    ```
+   \* on iOS, pass your App Store URL — it is used by the SDK for attribution.
+
+3. Create `AdaViewController` instance:
 
 ```dart
 class _MyState extends State<MyApp> {
@@ -28,7 +34,7 @@ class _MyState extends State<MyApp> {
 }
 ```
 
-3. Create `AdaView` widget:
+4. Create `AdaView` widget:
 
 ```dart
 class _MyState extends State<MyApp> {

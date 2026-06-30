@@ -28,3 +28,7 @@
 
 * AdaSdk required init method for ios
 * reporting macros support
+
+## 1.4.0+1
+
+* documentation update
