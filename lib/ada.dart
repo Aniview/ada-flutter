@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/services.dart';
 
 class Ada {
@@ -10,8 +11,8 @@ class Ada {
   /// Initialize instance of the AdaSDK.
   ///
   static Future<Ada> initialize({String? iosStoreUrl}) async {
-    if (!_initialized) {
-        await _channel.invokeMethod("initialize", {"iosStoreUrl": iosStoreUrl});
+    if (!_initialized && Platform.isIOS) {
+      await _channel.invokeMethod("initialize", {"iosStoreUrl": iosStoreUrl});
       _initialized = true;
     }
     return const Ada._();
