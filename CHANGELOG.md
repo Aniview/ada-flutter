@@ -32,3 +32,7 @@
 ## 1.4.0+1
 
 * documentation update
+
+## 1.4.0+2
+
+* fix for android crash during init of AdaSDK
