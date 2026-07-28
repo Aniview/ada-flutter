@@ -29,6 +29,13 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
 
+  # Ads SDK + UMP consent flow (GDPR/TCF).
+  google_mobile_ads: ^8.0.0
+
+  # Reads back the IABTCF_* keys UMP persists to user defaults/prefs,
+  # to verify the consent decision was actually saved.
+  shared_preferences: ^2.5.5
+
 dev_dependencies:
   integration_test:
     sdk: flutter
