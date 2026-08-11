@@ -1,39 +1,15 @@
 PODS:
-  - ada (0.0.1):
-    - Flutter
-    - Google-Mobile-Ads-SDK
-    - GoogleUserMessagingPlatform
   - Flutter (1.0.0)
-  - Google-Mobile-Ads-SDK (13.6.0):
-    - GoogleUserMessagingPlatform (>= 1.1)
-  - GoogleUserMessagingPlatform (3.1.0)
-  - integration_test (0.0.1):
-    - Flutter
 
 DEPENDENCIES:
-  - ada (from `.symlinks/plugins/ada/ios`)
   - Flutter (from `Flutter`)
-  - integration_test (from `.symlinks/plugins/integration_test/ios`)
-
-SPEC REPOS:
-  trunk:
-    - Google-Mobile-Ads-SDK
-    - GoogleUserMessagingPlatform
 
 EXTERNAL SOURCES:
-  ada:
-    :path: ".symlinks/plugins/ada/ios"
   Flutter:
     :path: Flutter
-  integration_test:
-    :path: ".symlinks/plugins/integration_test/ios"
 
 SPEC CHECKSUMS:
-  ada: ca75f4493830b15447dd34148712facc681bdfb2
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
-  Google-Mobile-Ads-SDK: 6e501ace4af8d63e967bd45497c8b2b05821163d
-  GoogleUserMessagingPlatform: befe603da6501006420c206222acd449bba45a9c
-  integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
 
 PODFILE CHECKSUM: 4138d64326e1066c34d5597623b2e2167d1973c8
 
