@@ -51,5 +51,5 @@ android {
 }
 
 dependencies {
-    implementation("com.adservrs:ada:1.2.0")
+    implementation("com.adservrs:ada:1.5.1")
 }
