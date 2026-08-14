@@ -1,5 +1,6 @@
 ## 1.5.0
 
+* feature: floating placement support
 * added device model macro
 * added device manufacturer macro
 

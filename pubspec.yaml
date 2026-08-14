@@ -1,6 +1,6 @@
 name: ada
 description: "Ada flutter plugin"
-version: 1.5
+version: 1.5.0
 repository: https://github.com/Aniview/ada-flutter
 
 environment:
